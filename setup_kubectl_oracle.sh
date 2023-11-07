@@ -82,11 +82,8 @@ spec:
         - name: oracle-db
           image: localhost/oracle/database:ext
           imagePullPolicy: "IfNotPresent"
-          ports:
-            - containerPort: 1521
-            - containerPort: 5500
           command: ["bash"]
-          args: ["-c", "while :; do sleep 5; done"]
+          args: ["/opt/oracle/runOracle.sh"]
           volumeMounts:
             - mountPath: /opt/oracle/oradata
               name: datamount          
@@ -96,7 +93,7 @@ spec:
             - name: SVC_PORT
               value: "1521"
             - name: ORACLE_SID
-              value: "ORCLCDB"
+              value: "XE"
             - name: ORACLE_PDB
               value: "ORCLPDB1"
             - name: ORACLE_PWD
@@ -133,6 +130,10 @@ spec:
   selector:
     app: myoracle-db
 EOF
+
+kubectl -n oracle scale deployment myoracle-db --replicas=0
+sleep 10
+kubectl -n oracle scale deployment myoracle-db --replicas=1
 }
 
 uninstall_fn() {
