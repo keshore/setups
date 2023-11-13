@@ -131,6 +131,10 @@ spec:
     app: myoracle-db
 EOF
 
+cat <<-EOF
+If the container is getting created for the first time, please exec into pod and run setPassword.sh \$ORACLE_PWD
+EOF
+
 kubectl -n oracle scale deployment myoracle-db --replicas=0
 sleep 10
 kubectl -n oracle scale deployment myoracle-db --replicas=1
